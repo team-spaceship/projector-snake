@@ -13,3 +13,13 @@
     top: 40px;
     left: -108px;
 }
+#canvas {
+    width: 500px;
+    height: 500px;
+    position: relative;
+    top: 0;
+    z-index: 10;
+    transform: translateY(0);
+    margin-top: 20px;
+    background: transparent;
+}

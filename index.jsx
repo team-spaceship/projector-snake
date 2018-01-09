@@ -232,7 +232,7 @@ class App extends Component {
       <div className="sneek">
         <h1>Sneek</h1>
         <p id="status-message">Press 'Ok' to start the game</p>        
-        <canvas id="canvas" width="500" height="500" />
+        <canvas id="canvas" /> 
       </div>
     );
   }
