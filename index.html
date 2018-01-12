@@ -1,9 +1,10 @@
-<div class= 'game'>
+<div class='game'>
   <div id = 'home'>
     <canvas id='mycanvas'>
     </canvas>
   </div>
   <p id="game-start-text">Press 'Ok' to start the game!</p>
+  <img id="marvin" style="width:30px;height:30px;display:none;" src="https://cdn.discordapp.com/emojis/383376435126992896.png">
 </div>
 <style>
   body {
@@ -12,31 +13,28 @@
     color:white;
     background-color: black;
     overflow: hidden;
+    margin: 0;
+    padding: 0;
   }
+
   #mycanvas {
+      z-index: 10;
+      background: transparent;
   }
 </style>
 <script> 
-  var mycanvas = document.getElementById('mycanvas');
-  var ctx = mycanvas.getContext('2d');
-  var snakeSize = 30; 
-
-  mycanvas.width = window.innerWidth - 20;
-  mycanvas.height = window.innerHeight - 100;
-
-  var w = mycanvas.width;
-  var h = mycanvas.height;
-  var score = 0;
+  var mycanvas;
+  var ctx;
+  var direction;
+  var gameloop;
+  var w;
+  var h;
+  var score;
+  var gameStartText;
+  var snakeSize = 50; 
   var snake;
   var food;
-  var animationFrame = null;
-  var gameStartText = document.getElementById('game-start-text');
-
-  console.log(w);
-  console.log(h);
-  console.log(w/snakeSize);
-  console.log(h/snakeSize);
-
+    
   var bodySnake = function(x, y) {
     ctx.fillStyle = 'green';
     ctx.fillRect(x*snakeSize, y*snakeSize, snakeSize, snakeSize);
@@ -114,6 +112,8 @@
     
     pizza(food.x, food.y); 
     scoreText();
+
+    drawMarvin((snakeX* snakeSize) , (snakeY * snakeSize));
   }
         
   var createFood = function() {
@@ -143,18 +143,36 @@
     } 
     return false;
   }
+
+  var drawMarvin = function (x, y) {
+      var img = document.getElementById("marvin");
+      ctx.drawImage(img, x, y, 50, 50);
+  }
         
-  var init = function(){
+  function initGame(){
+    mycanvas = document.getElementById('mycanvas');
+    ctx = mycanvas.getContext('2d');
+    
+    mycanvas.width = window.innerWidth - 20;
+    mycanvas.height = window.innerHeight - 100;
+
+    w = mycanvas.width;
+    h = mycanvas.height;
+    score = 0;
+
+    gameStartText = document.getElementById('game-start-text');
     direction = 'down';
+    
     drawSnake();
     createFood();
-    gameloop = setInterval(paint, 80);
+
+    if(gameloop)
+      clearInterval(gameloop);
+
+    gameloop = setInterval(paint, 120);
     gameStartText.style.display = 'none';
   }
   
-  gameStartText.addEventListener('click', function() {
-    init();
-  })
   document.addEventListener('projectorOnLeftKey', function(){
     if (direction != 'right') {
       direction = 'left';
@@ -223,6 +241,6 @@ case 40:
 
 
   document.addEventListener('projectorOnEnterKey', function(){
-    init();
+    initGame();
   });        
 </script>
