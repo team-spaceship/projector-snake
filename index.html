@@ -1,14 +1,13 @@
 <div class='game'>
   <div id = 'home'>
-    <canvas id='mycanvas'>
+    <canvas id='mycanvas' style="display:none;">
     </canvas>
   </div>
-  <p id="game-start-text">Press 'Ok' to start the game!</p>
+  <p id="game-start-text" style="text-align: center; position: absolute; top: 50%; bottom: 50%; width: 100%;" >Press 'Ok' to start the game!</p>
   <img id="marvin" style="width:30px;height:30px;display:none;" src="https://cdn.discordapp.com/emojis/383376435126992896.png">
 </div>
 <style>
   body {
-    text-align: center;
     font-size: 40px;
     color:white;
     background-color: black;
@@ -20,18 +19,20 @@
   #mycanvas {
       z-index: 10;
       background: transparent;
+      border-radius: 5px;
+      border: 2px solid white;
   }
 </style>
 <script> 
   var mycanvas;
   var ctx;
   var direction;
-  var gameloop;
+  var interval;
   var w;
   var h;
   var score;
   var gameStartText;
-  var snakeSize = 50; 
+  var snakeSize = 30; 
   var snake;
   var food;
     
@@ -51,9 +52,12 @@
   
   var scoreText = function() {
     var score_text = "Score: " + score;
-    ctx.font="18px Arial";
-    ctx.fillStyle = 'blue';
-    ctx.fillText(score_text, 90, h-5);
+    ctx.font="30px Arial";
+    ctx.fillStyle = 'white';
+    var x = (mycanvas.width / 2);
+    var y = mycanvas.height - 15;
+    ctx.textAlign="center"; 
+    ctx.fillText(score_text, x, y);
   }
   
   var drawSnake = function() {
@@ -65,7 +69,7 @@
   }
   
   var paint = function(){
-    ctx.fillStyle = 'lightgrey';
+    ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, w, h);
     ctx.strokeStyle = 'black';
     ctx.strokeRect(0, 0, w, h);
@@ -83,13 +87,14 @@
     } else if(direction == 'down') { 
       snakeY++; 
     }
-    console.log(snakeY); 
     if (snakeX == -1 || snakeX >= w/snakeSize || snakeY == -1 || snakeY >= h/snakeSize || checkCollision(snakeX, snakeY, snake)) {
       //restart game
       
       ctx.clearRect(0,0,w,h);
-      gameloop = clearInterval(gameloop);
+      interval = clearInterval(interval);
       gameStartText.style.display = 'block';
+      // Hide canvas
+      mycanvas.style.display = 'none';
       return;          
     }
     
@@ -146,7 +151,7 @@
 
   var drawMarvin = function (x, y) {
       var img = document.getElementById("marvin");
-      ctx.drawImage(img, x, y, 50, 50);
+      ctx.drawImage(img, x, y, 30, 30);
   }
         
   function initGame(){
@@ -166,11 +171,14 @@
     drawSnake();
     createFood();
 
-    if(gameloop)
-      clearInterval(gameloop);
+    if(interval)
+      clearInterval(interval);
 
-    gameloop = setInterval(paint, 120);
+    interval = setInterval(paint, 400);
+    // Show canvas
+    mycanvas.style.display = 'block';
     gameStartText.style.display = 'none';
+    console.log(mycanvas.style);
   }
   
   document.addEventListener('projectorOnLeftKey', function(){
@@ -182,65 +190,56 @@
   document.addEventListener('projectorOnRightKey', function(){
     if (direction != 'left') {
       direction = 'right';
-      console.log('right');
     }
   });
 
   document.addEventListener('projectorOnUpKey', function(){
     if (direction != 'down') {
       direction = 'up';
-      console.log('up');
     }
   });
 
   document.addEventListener('projectorOnDownKey', function(){
     if (direction != 'up') {
       direction = 'down';
-      console.log('down');
     }
   });
 
+  document.addEventListener('projectorOnEnterKey', function(){
+      initGame();
+  });
 
+  
+  // add arrow controls just for demonstration/testing when there are no websocket controls available.
   document.onkeydown = function(event) {
 
-keyCode = window.event.keyCode; 
-keyCode = event.keyCode;
-
-switch(keyCode) {
-
-case 37: 
-  if (direction != 'right') {
-    direction = 'left';
-  }
-  console.log('left'); 
-  break;
-
-case 39:
-  if (direction != 'left') {
-  direction = 'right';
-  console.log('right');
-  }
-  break;
-
-case 38:
-  if (direction != 'down') {
-  direction = 'up';
-  console.log('up');
-  }
-  break;
-
-case 40:
-  if (direction != 'up') {
-  direction = 'down';
-  console.log('down');
-  }
-  break;
-  }
-}
-
-
-
-  document.addEventListener('projectorOnEnterKey', function(){
-    initGame();
-  });        
+  keyCode = window.event.keyCode; 
+  keyCode = event.keyCode;
+  
+  switch(keyCode) {
+      case 37: 
+          if (direction != 'right') {
+          direction = 'left';
+          }
+          break;
+      
+      case 39:
+          if (direction != 'left') {
+          direction = 'right';
+          }
+          break;
+      
+      case 38:
+          if (direction != 'down') {
+          direction = 'up';
+          }
+          break;
+      
+      case 40:
+          if (direction != 'up') {
+          direction = 'down';
+          }
+          break;
+          }
+      }        
 </script>
