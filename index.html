@@ -27,7 +27,7 @@
   var mycanvas;
   var ctx;
   var direction;
-  var interval;
+  var interval = window.interval;
   var w;
   var h;
   var score;
@@ -91,7 +91,7 @@
       //restart game
       
       ctx.clearRect(0,0,w,h);
-      interval = clearInterval(interval);
+      window.interval = clearInterval(window.interval);
       gameStartText.style.display = 'block';
       // Hide canvas
       mycanvas.style.display = 'none';
@@ -171,10 +171,10 @@
     drawSnake();
     createFood();
 
-    if(interval)
-      clearInterval(interval);
+    if(window.interval)
+      clearInterval(window.interval);
 
-    interval = setInterval(paint, 400);
+    window.interval = setInterval(paint, 400);
     // Show canvas
     mycanvas.style.display = 'block';
     gameStartText.style.display = 'none';
